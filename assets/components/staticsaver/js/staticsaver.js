@@ -1,3 +1,16 @@
+function camelToUnderscore(str) {
+    return str.replace(/\W+/g, '_')
+        .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+        .toLowerCase();
+    //.replace(/[_]{1,}/g,"_");
+}
+
+function toCamel(str) {
+    return str.replace(/\W+(.)/g, function (x, chr) {
+        return chr.toUpperCase();
+    })
+}
+
 var StaticSaver = function(config) {
     Ext.onReady(function(){
 
@@ -17,6 +30,9 @@ var StaticSaver = function(config) {
 
         var setValue = function(placeholder, value) {
             var new_value = '';
+
+            value = camelToUnderscore(value);
+
             if (MODx.config['staticsaver.static_file_extension'] !== '') {
                 new_value = value + '.' + MODx.config['staticsaver.static_file_extension'];
             }
@@ -27,7 +43,7 @@ var StaticSaver = function(config) {
             if (MODx.config['staticsaver.include_category']) {
                 var category = categoryInput.getRawValue();
                 if (category != categoryInput.getValue()) {
-                    new_value =  category.toLowerCase().replace(/ /g,"_") + '/' + new_value;
+                    new_value =  camelToUnderscore(category) + '/' + new_value;
                 }
             }
             placeholder.setValue(new_value);
